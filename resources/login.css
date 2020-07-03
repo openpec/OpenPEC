@@ -1,0 +1,172 @@
+/* CSS reset */
+*, *:before, *:after { 
+    margin:0;
+    padding:0;
+    font-family: Arial,sans-serif;
+  }
+   
+  /* remove a linha dos links */
+  a{
+    text-decoration: none;
+  }
+   
+  /* esconde as ancoras da tela */
+  a.links{
+    display: none;
+  }
+
+  body {
+    background: #FFFFFF url("/resources/back_5.jpg") no-repeat right top fixed;
+  }
+
+  /* classe content envolve o conteúdo */
+  .content{
+    width: 400px;
+    min-height: 540px;    
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%; 
+    transform: translate(-50%, -50%)
+  }
+
+  /* cabeçalho */
+  h1{
+    font-size: 25px;
+    color: #0a0363;
+    padding: 2px 0 10px 0;
+    font-family: sans-serif;
+    font-weight: normal;
+    text-align: center;
+    padding-bottom: 30px;
+  }
+
+  h6{
+    font-size: 12px;
+    color: #000000;
+    font-weight: normal;
+    text-align: center;
+    padding-top: 60px;
+  }
+   
+  .content p:first-child{
+    margin: 0px;
+  }
+   
+  label{
+    color: #0a0363;
+    position: relative;
+  }
+
+  /* estilos dos placeholders */
+::-webkit-input-placeholder  {
+    color: #bebcbc; 
+    font-style: italic;
+  }
+   
+  input:-moz-placeholder,
+  textarea:-moz-placeholder{
+    color: #bebcbc;
+    font-style: italic;
+  }
+
+  input {
+    outline: none;
+  }
+   
+  /*estilo dos input,  menos o checkbox */
+  input:not([type="checkbox"]){
+    width: 95%;
+    margin-top: 4px;
+    padding: 10px;    
+    border: 1px solid #b2b2b2;
+    margin-bottom:10px;
+   
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+   
+    -webkit-box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
+    box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
+   
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+  }
+   
+  /*estilo do botão submit */
+  input[type="submit"]{
+    width: 100%!important;
+    cursor: pointer;  
+    background: #0a0363;
+    padding: 8px 5px;
+    color: #fff;
+    font-size: 20px;  
+    border: 1px solid #fff;    
+    text-shadow: 0 1px 1px #333;
+   
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+   
+    transition: all 0.2s linear;
+  }
+   
+  /*estilo do botão submit no hover */
+  input[type="submit"]:hover{
+    background: #1c1586;
+  }
+
+  .link{
+    position: relative;
+    color: #7f7c7c;
+    right: 0px;
+    height: 15px;
+    width: 100%px;
+    padding: 17px 0px 0px 0px;
+    font-size: 16px;
+    text-align: right;
+   
+    -webkit-border-radius: 0 0  5px 5px;
+    border-radius: 0 0  5px 5px;
+  }
+   
+  .link a {
+    font-weight: normal;
+    background: #f7f8f1;
+    padding: 6px;
+    color: rgb(0, 0, 0);
+    margin-left: 10px;
+    
+   
+    -webkit-border-radius: 4px;
+    border-radius: 4px;  
+   
+    -webkit-transition: all 0.4s linear;
+    transition: all 0.4s  linear;
+  }
+   
+  .link a:hover {
+    color: #000000;
+    background: #f7f7f7;
+    
+  }
+ 
+#login{
+  position: absolute;
+  top: 0px;
+  width: 88%;   
+  padding: 18px 6% 30px 6%;
+  margin: 0 0 35px 0;
+  background: #f7f7f7;
+  border: 1px solid rgba(0, 27, 31, 0.8);
+   
+  -webkit-box-shadow: 5px;
+  border-radius: 5px;
+   
+  -webkit-animation-duration: 0.5s;
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-fill-mode: both;
+ 
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+}
