@@ -19,7 +19,9 @@ func Routes(srv *config.Server) {
 	srv.Router.Handle("/", auth.LoginPost(srv)).Methods("POST")
 	srv.Router.Handle("/logout", auth.Logout(srv)).Methods("GET")
 	srv.Router.Handle("/naologado", auth.NaoLogado(srv)).Methods("GET")
+
 	srv.Router.Handle("/home", modules.HomeGet(srv)).Methods("GET")
+	srv.Router.Handle("/sobre", modules.Sobre(srv)).Methods("GET")
 
 	//modulo atendimentos
 	srv.Router.Handle("/atendimentos", atendimentos.HomeGet(srv)).Methods("GET")

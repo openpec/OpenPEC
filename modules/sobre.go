@@ -9,8 +9,8 @@ import (
 	"github.com/OpenPEC/config"
 )
 
-//HomeGet é o handler da pagina principal
-func HomeGet(srv *config.Server) http.HandlerFunc {
+//Sobre define a página de sobre
+func Sobre(srv *config.Server) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -18,8 +18,6 @@ func HomeGet(srv *config.Server) http.HandlerFunc {
 		if err != nil {
 			http.Error(w, err.Error()+".\n\nVocê deve deletar o cookie do site localhost:9090 manualmente. \nLembre-se de clicar em 'Sair' quando desconectar do OpenPEC.", http.StatusInternalServerError)
 			return
-			//chrome://settings/cookies/detail?site=localhost
-			//link no chrome pra gerenciar cookie do localhost
 		}
 
 		user := config.GetUser(session)
@@ -36,7 +34,7 @@ func HomeGet(srv *config.Server) http.HandlerFunc {
 		}
 
 		//template html
-		t, err := template.ParseFiles(wd + "/templates/home.gohtml")
+		t, err := template.ParseFiles(wd + "/templates/sobre.gohtml")
 		if err != nil {
 			log.Fatal(err)
 		}
