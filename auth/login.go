@@ -23,7 +23,7 @@ func LoginGet(srv *config.Server) http.HandlerFunc {
 		}
 
 		//template html
-		t, err := template.ParseFiles(wd + "/templates/login.html")
+		t, err := template.ParseFiles(wd + "/templates/login.gohtml")
 		if err != nil {
 			log.Fatal(err)
 		}

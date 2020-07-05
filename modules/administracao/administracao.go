@@ -19,7 +19,7 @@ func HomeGet(srv *config.Server) http.HandlerFunc {
 		}
 
 		//template html
-		t, err := template.ParseFiles(wd + "/templates/administracao/administracao.html")
+		t, err := template.ParseFiles(wd + "/templates/administracao/administracao.gohtml")
 		if err != nil {
 			log.Fatal(err)
 		}
