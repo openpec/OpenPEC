@@ -5,12 +5,14 @@ import (
 
 	_ "github.com/go-sql-driver/mysql" //driver para o sql
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 )
 
 //Server é a estrutura principal do server
 type Server struct {
 	DB     *sql.DB
 	Router *mux.Router
+	Store  *sessions.CookieStore
 }
 
 //Connect conecta ao banco de dados

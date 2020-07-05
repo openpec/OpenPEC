@@ -31,6 +31,8 @@ func run() error {
 		Router: mux.NewRouter(),
 	}
 
+	srv.StartSession() //sessions
+
 	routes.Routes(srv)
 
 	//Para usar CSS

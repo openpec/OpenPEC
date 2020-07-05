@@ -4,12 +4,25 @@
   <title>OpenPEC - Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   <link rel="stylesheet" type="text/css" href="resources/login.css" />
+   <script src="main.js"></script>
 </head>
 <body>
-  <div class="container" >     
-    <div class="content">      
+  <div class="container" >   
+    <div class="content">   
+      <div id="login">  
+      <!--Se estiver logado-->
+      {{if .Authenticated }}
+        <p class="link">
+          <a href="/home">Continuar logado como {{.FirstName}}.</a>
+        </p>
+        <p class="link">
+          <a href="/logout">Trocar de usuário.</a>
+        </p>
+      {{end}}
+
       <!--FORMULÁRIO DE LOGIN-->
-      <div id="login">
+      {{ if not .Authenticated }}
+      
         <form method="post" action=""> 
           <h1>e-SUS AB OpenPEC</h1> 
           <p> 
@@ -34,8 +47,9 @@
             <h6>OpenPEC @ 2020</h6>
           </p>
         </form>
+      
+      {{ end }}
       </div>
- 
     </div>
   </div>  
 </body>
