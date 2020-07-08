@@ -1,10 +1,7 @@
 package modules
 
 import (
-	"html/template"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/OpenPEC/config"
 )
@@ -27,17 +24,6 @@ func Sobre(srv *config.Server) http.HandlerFunc {
 			http.Redirect(w, r, "/naologado", http.StatusFound)
 		}
 
-		//Pega a pasta raiz do projeto
-		wd, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		//template html
-		t, err := template.ParseFiles(wd + "/templates/sobre.gohtml")
-		if err != nil {
-			log.Fatal(err)
-		}
-		t.Execute(w, user.FirstName)
+		config.Render(w, "/templates/sobre.gohtml", user.Nome)
 	}
 }

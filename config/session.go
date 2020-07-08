@@ -5,13 +5,27 @@ import (
 
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"gopkg.in/guregu/null.v4"
 )
 
 //User define a estrutura para a sessão
 type User struct {
-	CPF           string
-	FirstName     string
 	Authenticated bool
+	CPF           string
+	Nome          string
+	Sobrenome     string
+	Email         string
+	IsAdmin       bool
+	CNS           null.String
+	Sexo          string
+	Cidade        null.String
+	Estado        string
+	Endereco      null.String
+	Num           null.String
+	Bairro        null.String
+	CEP           null.String
+	Tel           null.String
+	Nascimento    string
 }
 
 //StartSession inicializa as configurações pra sessão

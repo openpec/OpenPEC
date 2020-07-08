@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+  <title>OpenPEC - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <link rel="stylesheet" type="text/css" href="resources/login.css" />
+   <script src="main.js"></script>
+</head>
+<body>
+  <div class="container" >   
+    <div class="content">   
+      <div id="login">        
+        <form method="post" action=""> 
+          <h1>Cadastrar</h1> 
+          <h5> Campos com * são obrigatórios. </h5><br /><br />
+          <div>
+            {{ with .CPF }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_cpf">CPF *</label>
+              <input id="enter_cpf" name="CPF" required="required" type="text" placeholder="98765432199"/>
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .Email }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_email">E-mail *</label>
+              <input id="enter_email" name="Email" required="required" type="email" placeholder="openpec@email.com"/>
+            </p><br />
+          </div>
+           
+          <div>
+            {{ with .Senha }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_pass">Senha * (Mínimo 6 caracteres)</label>
+              <input id="enter_pass" name="Senha" required="required" type="password"/> 
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .Senha }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_pass2">Confirme a Senha *</label>
+              <input id="enter_pass2" name="Senha2" required="required" type="password"/> 
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .Nome }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_nome">Primeiro Nome *</label>
+              <input id="enter_nome" name="Nome" required="required" type="text" placeholder="João"/>
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .Sobrenome }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_sobrenome">Sobrenome *</label>
+              <input id="enter_sobrenome" name="Sobrenome" required="required" type="text" placeholder="da Silva"/>
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .CNS }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_cns">CNS</label>
+              <input id="enter_cns" name="CNS" type="text" placeholder="000000000000000"/>
+            </p><br />
+          </div>
+
+          <p> 
+            <label for="Sexo">Sexo *</label><br>
+            <select name="Sexo" placeholder="Sexo"><option>Masculino<option>Feminino<option>Outro</select><br/>
+          </p><br />
+
+          <p> 
+            <label for="enter_nascimento">Data de Nascimento *</label>
+            <input id="enter_nascimento" name="Nascimento" required="required" type="date" placeholder="01/01/2000" min="1910-01-01"/>
+          </p><br />
+
+          <div>
+            {{ with .Cidade }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_cidade">Cidade</label>
+              <input id="enter_cidade" name="Cidade" type="text" placeholder="São Paulo"/>
+            </p><br />
+          </div>
+
+          <p> 
+            <label for="estado">Estado *</label><br>
+            <select name="Estado" placeholder="Estado" required="required">
+              <option>AC<option>AL<option>AP<option>AM<option>BA<option>CE<option>DF<option>ES<option>GO<option>MA
+              <option>MT<option>MS<option>MG<option>PA<option>PB<option>PR<option>PE<option>PI<option>RJ<option>RN
+              <option>RS<option>RO<option>RR<option>SC<option>SP<option>SE<option>TO
+            </select><br/>
+          </p><br />
+
+          <div>
+            {{ with .Endereco }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_endereco">Endereço</label>
+              <input id="enter_endereco" name="Endereco" type="text" placeholder="Rua 9 de Julho"/>
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .Num }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_num">Número Residencial</label>
+              <input id="enter_num" name="Num" type="text" placeholder="0000"/>
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .Bairro }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_bairro">Bairro</label>
+              <input id="enter_bairro" name="Bairro" type="text" placeholder=""/>
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .CEP }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="enter_cep">CEP</label>
+              <input id="enter_cep" name="CEP" type="text" placeholder="00000000"/>
+            </p><br />
+          </div>
+
+          <div>
+            {{ with .Tel }}
+            <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="Tel">Telefone/Celular</label>
+              <input id="Tel" name="Tel" type="Tel" placeholder="11900009999"/>
+            </p><br />
+          </div>
+
+           
+          <p> 
+            <input type="submit" value="Cadastrar" /> 
+          </p>
+
+          <p class="link">
+            <a href="/">Cancelar</a>
+          </p>
+
+          <p>
+            <h6>OpenPEC @ 2020</h6>
+          </p>
+        </form>
+      
+
+      </div>
+    </div>
+  </div>  
+</body>
+</html>

@@ -5,7 +5,10 @@
     font-family: Arial,sans-serif;
   }
    
-   
+  a {
+    text-decoration: none;
+  } 
+
   /* esconde as ancoras da tela */
   a.links{
     display: none;
@@ -36,6 +39,16 @@
     font-weight: normal;
     text-align: center;
     padding-bottom: 30px;
+  }
+
+  h4{
+    font-size: 18px;
+    color: #000000;
+    padding: 2px 0 10px 0;
+    font-family: sans-serif;
+    font-weight: normal;
+    text-align: left;
+    padding-bottom: 15px;
   }
 
   h6{
@@ -145,6 +158,38 @@
     background: #f7f7f7;
     
   }
+
+  .link2{
+    position: relative;
+    color: #7f7c7c;
+    right: 0px;
+    height: 15px;
+    width: 100%px;
+    padding: 13px 0px 10px 0px;
+    font-size: 18px;
+    text-align: left;
+   
+    -webkit-border-radius: 0 0  5px 5px;
+    border-radius: 0 0  5px 5px;
+  }
+
+  .link2 a {
+    font-weight: normal;
+    background: #f7f8f1;
+    padding: 6px;
+    color: #0a0363;
+    
+   
+    -webkit-border-radius: 4px;
+    border-radius: 4px;  
+   
+    -webkit-transition: all 0.4s linear;
+    transition: all 0.4s  linear;
+  }
+
+.error {
+  color: red;
+}
  
 #login{
   position: absolute;

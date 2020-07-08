@@ -15,10 +15,13 @@ import (
 //Routes define todas as rotas do webservice
 func Routes(srv *config.Server) {
 
+	//Autenticação
 	srv.Router.Handle("/", auth.LoginGet(srv)).Methods("GET")
 	srv.Router.Handle("/", auth.LoginPost(srv)).Methods("POST")
 	srv.Router.Handle("/logout", auth.Logout(srv)).Methods("GET")
 	srv.Router.Handle("/naologado", auth.NaoLogado(srv)).Methods("GET")
+	srv.Router.Handle("/cadastro", auth.CadastroGet(srv)).Methods("GET")
+	srv.Router.Handle("/cadastro", auth.CadastroPost(srv)).Methods("POST")
 
 	srv.Router.Handle("/home", modules.HomeGet(srv)).Methods("GET")
 	srv.Router.Handle("/sobre", modules.Sobre(srv)).Methods("GET")

@@ -1,11 +1,9 @@
 package auth
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/OpenPEC/config"
 	"golang.org/x/crypto/bcrypt"
@@ -23,18 +21,12 @@ func LoginGet(srv *config.Server) http.HandlerFunc {
 
 		user := config.GetUser(session)
 
-		//Pega a pasta raiz do projeto
-		wd, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
+		if user.Authenticated {
+			config.Render(w, "/templates/auth/login.gohtml", user)
+		} else {
+			config.Render(w, "/templates/auth/login.gohtml", nil)
 		}
 
-		//template html
-		t, err := template.ParseFiles(wd + "/templates/login.gohtml")
-		if err != nil {
-			log.Fatal(err)
-		}
-		t.Execute(w, user)
 	}
 }
 
@@ -51,47 +43,65 @@ func LoginPost(srv *config.Server) http.HandlerFunc {
 		r.ParseForm()
 
 		//Checa dados
-		stmt, err := srv.DB.Prepare("SELECT * FROM user WHERE CPF=?")
+		stmt, err := srv.DB.Prepare("SELECT * FROM user WHERE cpf=?")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		row, err := stmt.Query(template.HTMLEscapeString(r.Form.Get("enter_cpf")))
+		rows, err := stmt.Query(template.HTMLEscapeString(r.Form.Get("CPF")))
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
+
 		}
+		defer rows.Close()
 
 		var id int
-		var cpf string
 		var pass string
-		var name string
 
-		row.Next()
-		err = row.Scan(&id, &cpf, &pass, &name)
-		if err != nil {
-			fmt.Println("Dados errados ou faltando: ", err)
-		}
+		//Para validação
+		errosDados := make(map[string]string)
 
-		err = bcrypt.CompareHashAndPassword([]byte(pass), []byte(template.HTMLEscapeString(r.Form.Get("enter_pass")))) // validating password
+		user := new(config.User) //Inicia a struct para pegar as informações do BD
 
-		if err == nil { //Login aceito
+		if !rows.Next() {
+			if rows.Err() == nil {
+				//CPF não existe no BD
+				errosDados["CPF"] = "Esse CPF não está cadastrado."
+				config.Render(w, "/templates/auth/login.gohtml", errosDados)
 
-			// Gerencia cookies e sessão
-			user := &config.User{
-				CPF:           cpf,
-				Authenticated: true,
-				FirstName:     name,
+			} else {
+				log.Panic("Erro em pegar o rows.next: ", rows.Err())
 			}
-			session.Values["user"] = user
-			err = session.Save(r, w)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			http.Redirect(w, r, "home", http.StatusFound) //Redireciona para página principal
 		} else {
-			fmt.Println("CPF ou senha invalidos: ", err)
+
+			//Recebe os valores do BD
+			err = rows.Scan(&id, &user.CPF, &pass, &user.Nome, &user.Sobrenome, &user.Email, &user.CNS, &user.Sexo, &user.Cidade, &user.Estado, &user.Endereco, &user.Num, &user.Bairro, &user.CEP, &user.Tel, &user.Nascimento, &user.IsAdmin)
+			if err != nil {
+				log.Panic("Erro no rows.scan: ", err)
+
+			}
+
+			//verifica se a senha está correta para esse CPF
+			err = bcrypt.CompareHashAndPassword([]byte(pass), []byte(template.HTMLEscapeString(r.Form.Get("Senha")))) // validating password
+
+			if err == nil { //Login aceito
+
+				user.Authenticated = true
+
+				session.Values["user"] = user //a sessão recebe os dados do usuário
+				err = session.Save(r, w)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+
+				http.Redirect(w, r, "home", http.StatusFound) //Redireciona para página principal
+
+			} else {
+				errosDados["Pass"] = "A senha está incorreta."
+				config.Render(w, "/templates/auth/login.gohtml", errosDados)
+			}
+
 		}
 
 	}

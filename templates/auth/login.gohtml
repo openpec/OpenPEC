@@ -13,7 +13,7 @@
       <!--Se estiver logado-->
       {{if .Authenticated }}
         <p class="link">
-          <a href="/home">Continuar logado como {{.FirstName}}.</a>
+          <a href="/home">Continuar logado como {{.Nome}}.</a>
         </p>
         <p class="link">
           <a href="/logout">Trocar de usuário.</a>
@@ -25,19 +25,36 @@
       
         <form method="post" action=""> 
           <h1>e-SUS AB OpenPEC</h1> 
-          <p> 
-            <label for="enter_cpf">CPF</label>
-            <input id="enter_cpf" name="enter_cpf" required="required" type="text" placeholder="00000000000"/>
-          </p>
+
+          <div>
+            {{ with .CPF }}
+              <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="CPF">CPF</label>
+              <input id="CPF" name="CPF" required="required" type="text" placeholder="00000000000"/>
+            </p>
+          </div>
            
-          <p> 
-            <label for="enter_pass">Senha</label>
-            <input id="enter_pass" name="enter_pass" required="required" type="password"/> 
-          </p>
+          <div>
+            {{ with .Pass }}
+              <p class="error">{{ . }}</p>
+            {{ end }}
+            <p> 
+              <label for="Senha">Senha</label>
+              <input id="Senha" name="Senha" required="required" type="password"/> 
+            </p>
+          </div>
            
           <p> 
             <input type="submit" value="Entrar" /> 
           </p>
+
+          
+          <p class="link2">
+            <a href="/cadastro">Cadastrar novo usuário</a>
+          </p>
+          
            
           <p class="link">
             <a href="">Esqueci minha senha</a>

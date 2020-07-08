@@ -30,3 +30,13 @@ func Logout(srv *config.Server) http.HandlerFunc {
 
 	}
 }
+
+//NaoLogado é a página que o usuário é redirecionado quando nao está logado
+func NaoLogado(srv *config.Server) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		config.Render(w, "/templates/auth/naologado.gohtml", nil)
+
+	}
+}
