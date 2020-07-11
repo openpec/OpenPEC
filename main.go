@@ -38,10 +38,11 @@ func run() error {
 	//Para usar CSS
 	srv.Router.PathPrefix("/resources/").Handler(http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
 
+	log.Println("O servidor está rodando na porta 9090...")
 	err = http.ListenAndServe(":9090", srv.Router) // setting listening port
 
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		log.Panic("ListenAndServe: ", err)
 	}
 	return nil
 }

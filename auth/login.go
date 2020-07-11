@@ -15,6 +15,7 @@ func LoginGet(srv *config.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		session, err := srv.Store.Get(r, "userInfo")
 		if err != nil {
+			log.Println("Conflito com os cookies. É preciso deletar o cookie de sessão passada para gerar um novo cookie.")
 			http.Error(w, err.Error()+".\n\nVocê deve deletar o cookie do site localhost:9090 manualmente. \nLembre-se de clicar em 'Sair' quando desconectar do OpenPEC.", http.StatusInternalServerError)
 			return
 		}
@@ -40,18 +41,19 @@ func LoginPost(srv *config.Server) http.HandlerFunc {
 			return
 		}
 
-		r.ParseForm()
+		if err = r.ParseForm(); err != nil {
+			log.Println("Erro ao pegar os dados do formulário: ", err)
+		}
 
 		//Checa dados
 		stmt, err := srv.DB.Prepare("SELECT * FROM user WHERE cpf=?")
 		if err != nil {
-			log.Fatal(err)
+			log.Panic("Erro ao preparar o banco de dados: ", err)
 		}
 
 		rows, err := stmt.Query(template.HTMLEscapeString(r.Form.Get("CPF")))
 		if err != nil {
-			log.Panic(err)
-
+			log.Panic("Erro ao consultar o banco de dados: ", err)
 		}
 		defer rows.Close()
 
@@ -78,7 +80,6 @@ func LoginPost(srv *config.Server) http.HandlerFunc {
 			err = rows.Scan(&id, &user.CPF, &pass, &user.Nome, &user.Sobrenome, &user.Email, &user.CNS, &user.Sexo, &user.Cidade, &user.Estado, &user.Endereco, &user.Num, &user.Bairro, &user.CEP, &user.Tel, &user.Nascimento, &user.IsAdmin)
 			if err != nil {
 				log.Panic("Erro no rows.scan: ", err)
-
 			}
 
 			//verifica se a senha está correta para esse CPF
@@ -94,6 +95,8 @@ func LoginPost(srv *config.Server) http.HandlerFunc {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
+
+				log.Println("Login efetuado com sucesso")
 
 				http.Redirect(w, r, "home", http.StatusFound) //Redireciona para página principal
 

@@ -1,13 +1,13 @@
 package auth
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"regexp"
 
 	"github.com/OpenPEC/config"
+	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/guregu/null.v4"
 )
@@ -28,7 +28,7 @@ func CadastroPost(srv *config.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 		if err != nil {
-			fmt.Println("Lida com o erro")
+			log.Println("Erro ao pegar os dados do formulário: ", err)
 		}
 
 		//Faz o tratamento dos valores que podem ser null. Utiliza o pacote null.v4
@@ -80,6 +80,14 @@ func CadastroPost(srv *config.Server) http.HandlerFunc {
 
 		errosDados := make(map[string]string)
 
+		//Chama a função para validação dos dados
+		valida, err := validate(user, errosDados, srv)
+		if err != nil {
+			log.Panic(err)
+			http.Error(w, "Desculpe, algo deu errado ", http.StatusInternalServerError)
+			return
+		}
+
 		//Valida a Senha
 		s := len(r.Form.Get("Senha")) >= 6 && r.Form.Get("Senha") == r.Form.Get("Senha2")
 
@@ -87,8 +95,8 @@ func CadastroPost(srv *config.Server) http.HandlerFunc {
 			errosDados["Senha"] = "As senhas não coincidem ou possuem menos de 6 caracteres."
 		}
 
-		//Checa os outros campos
-		if !validate(user, errosDados, srv) || !s {
+		//Verifica se os dados foram validados ou não
+		if !valida || !s {
 			config.Render(w, "/templates/auth/cadastro.gohtml", errosDados)
 		} else {
 			//Executa o cadastro
@@ -96,38 +104,39 @@ func CadastroPost(srv *config.Server) http.HandlerFunc {
 			//Encripta a senha
 			hashPass, err := bcrypt.GenerateFromPassword([]byte(r.Form.Get("Senha")), bcrypt.DefaultCost) // generate bcrypt
 			if err != nil {
-				log.Fatal(err)
+				log.Panic("Erro ao encriptar a senha: ", err)
 			}
 
 			//Insere os dados no Banco de Dados
 			stmt, err := srv.DB.Prepare("INSERT user SET cpf=?, pass=?, email=?, nome=?, sobrenome=?, cns=?, sexo=?, cidade=?, estado=?, endereco=?, numCasa=?, bairro=?, cep=?, telefone=?, nascimento=?, isAdmin=?")
 			if err != nil {
-				log.Fatal(err)
+				log.Panic("Erro ao preparar o banco de dados para inserção: ", err)
 			}
 
 			// executa o comando sql
 			res, err := stmt.Exec(user.CPF, hashPass, user.Email, user.Nome, user.Sobrenome, user.CNS, user.Sexo, user.Cidade, user.Estado, user.Endereco, user.Num, user.Bairro, user.CEP, user.Tel, user.Nascimento, false)
 			if err != nil {
-				log.Fatal(err)
+				log.Panic("Erro ao inserir os dados no banco de dados: ", err)
 			}
 
 			uid, err := res.LastInsertId()
 			if err != nil {
-				log.Fatal(err)
+				log.Panic("Erro ao pegar o id da última linha inserida: ", err)
 			}
 
 			if uid == 1 { //O primeiro usuário criado é o administrador do sistema
 				stmt, err := srv.DB.Prepare("UPDATE user SET isAdmin=? WHERE cod=?")
 				if err != nil {
-					log.Fatal(err)
+					log.Panic("Erro ao preparar o banco de dados para inserção: ", err)
 				}
 
 				// executa o comando sql
 				_, err = stmt.Exec(true, uid)
 				if err != nil {
-					log.Fatal(err)
+					log.Panic("Erro ao atualizar os dados no banco de dados: ", err)
 				}
 			}
+			log.Println("Cadastro efetuado com sucesso")
 
 			//Sucesso no cadastro
 			http.Redirect(w, r, "/", http.StatusFound) //Redireciona para a tela de login
@@ -136,12 +145,12 @@ func CadastroPost(srv *config.Server) http.HandlerFunc {
 	}
 }
 
-func validate(user *config.User, eD map[string]string, srv *config.Server) bool {
+func validate(user *config.User, eD map[string]string, srv *config.Server) (bool, error) {
 
 	//check CPF
 	r, err := regexp.Compile(`^[\d]+$`)
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	match := r.MatchString(user.CPF)
 
@@ -151,20 +160,20 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 		//verifica se já existe no BD
 		stmt, err := srv.DB.Prepare("SELECT * FROM user WHERE cpf=?")
 		if err != nil {
-			log.Fatal(err)
+			return false, errors.Wrap(err, "erro ao preparar o banco de dados:")
 		}
 
 		rows, err := stmt.Query(user.CPF)
 		if err != nil {
-			fmt.Println(err)
+			return false, errors.Wrap(err, "erro ao consultar o banco de dados:")
 		}
 		defer rows.Close()
 
 		if rows.Next() { //verifica se existe
-			if rows.Err() != nil {
-				log.Panic("Falha na busca pelo CPF no banco de dados")
-			}
 			eD["CPF"] = "Esse CPF já está cadastrado."
+		}
+		if rows.Err() != nil {
+			return false, errors.Wrap(err, "falha na busca do CPF no banco de dados:")
 		}
 
 	}
@@ -172,7 +181,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check email
 	r, err = regexp.Compile(".+@.+\\..+")
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	match = r.MatchString(user.Email)
 
@@ -182,20 +191,20 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 		//verifica se já existe no BD
 		stmt, err := srv.DB.Prepare("SELECT * FROM user WHERE email=?")
 		if err != nil {
-			log.Fatal(err)
+			return false, errors.Wrap(err, "erro ao preparar o banco de dados:")
 		}
 
 		rows, err := stmt.Query(user.Email)
 		if err != nil {
-			fmt.Println(err)
+			return false, errors.Wrap(err, "erro ao consultar o banco de dados:")
 		}
 		defer rows.Close()
 
 		if rows.Next() { //verifica se existe
-			if rows.Err() != nil {
-				log.Panic("Falha na busca pelo e-mail no banco de dados")
-			}
 			eD["Email"] = "Esse e-mail já está cadastrado."
+		}
+		if rows.Err() != nil {
+			return false, errors.Wrap(err, "falha na busca do email no banco de dados:")
 		}
 
 	}
@@ -203,7 +212,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check Nome
 	r, err = regexp.Compile("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+$")
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	match = r.MatchString(user.Nome)
 
@@ -214,7 +223,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check Sobrenome
 	r, err = regexp.Compile("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$")
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	match = r.MatchString(user.Sobrenome)
 
@@ -225,7 +234,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check CNS
 	r, err = regexp.Compile(`^[\d]+$`)
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	aux := user.CNS.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
@@ -236,20 +245,20 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 		//verifica se já existe no BD
 		stmt, err := srv.DB.Prepare("SELECT * FROM user WHERE cns=?")
 		if err != nil {
-			log.Fatal(err)
+			return false, errors.Wrap(err, "erro ao preparar o banco de dados:")
 		}
 
 		rows, err := stmt.Query(aux)
 		if err != nil {
-			fmt.Println(err)
+			return false, errors.Wrap(err, "erro ao consultar o banco de dados:")
 		}
 		defer rows.Close()
 
 		if rows.Next() { //verifica se existe
-			if rows.Err() != nil {
-				log.Panic("Falha na busca pelo CNS no banco de dados")
-			}
 			eD["CNS"] = "Esse CNS já está cadastrado."
+		}
+		if rows.Err() != nil {
+			return false, errors.Wrap(err, "falha na busca do CNS no banco de dados:")
 		}
 
 	}
@@ -257,7 +266,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check Cidade
 	r, err = regexp.Compile("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$")
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	aux = user.Cidade.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
@@ -269,7 +278,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check Bairro
 	r, err = regexp.Compile("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ 0123456789]+$")
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	aux = user.Bairro.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
@@ -281,7 +290,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check Endereco
 	r, err = regexp.Compile("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ 0123456789]+$")
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	aux = user.Endereco.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
@@ -293,7 +302,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check Num
 	r, err = regexp.Compile(`^[\d]+$`)
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	aux = user.Num.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
@@ -305,7 +314,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check CEP
 	r, err = regexp.Compile(`^[\d]+$`)
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	aux = user.CEP.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
@@ -317,7 +326,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 	//check Tel
 	r, err = regexp.Compile(`^[\d]+$`)
 	if err != nil {
-		fmt.Println("handle error")
+		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
 	aux = user.Tel.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
@@ -326,6 +335,6 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) bool 
 		eD["Tel"] = "Insira um número de telefone válido (Digite apenas números)."
 	}
 
-	return len(eD) == 0
+	return len(eD) == 0, nil
 
 }
