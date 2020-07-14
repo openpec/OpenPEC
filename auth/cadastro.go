@@ -147,6 +147,8 @@ func CadastroPost(srv *config.Server) http.HandlerFunc {
 
 func validate(user *config.User, eD map[string]string, srv *config.Server) (bool, error) {
 
+	//sexo, estado e nascimento não precisam de validação pois as escolhas no formulário são exatas
+
 	//check CPF
 	r, err := regexp.Compile(`^[\d]+$`)
 	if err != nil {
@@ -179,7 +181,7 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) (bool
 	}
 
 	//check email
-	r, err = regexp.Compile(".+@.+\\..+")
+	r, err = regexp.Compile("^[a-zA-Z\\d\\.\\-_@]+@[a-zA-Z]+\\..+") //aceita letras, números e os símbolos - _ @ .
 	if err != nil {
 		return false, errors.Wrap(err, "não foi possível criar a expressão regular")
 	}
@@ -239,9 +241,9 @@ func validate(user *config.User, eD map[string]string, srv *config.Server) (bool
 	aux := user.CNS.ValueOrZero() //retorna o valor ou vazio
 	match = r.MatchString(aux)
 
-	if (!match || len(aux) != 15) && len(aux) > 0 {
+	if (!match || len(aux) != 15) && !user.CNS.IsZero() {
 		eD["CNS"] = "Insira um CNS válido (São 15 números)."
-	} else if len(aux) > 0 {
+	} else if !user.CNS.IsZero() {
 		//verifica se já existe no BD
 		stmt, err := srv.DB.Prepare("SELECT * FROM user WHERE cns=?")
 		if err != nil {
