@@ -1,9 +1,6 @@
 ## Resumo
 
-O DATASUS, departamento responsável pelo desenvolvimento de sistemas auxiliares ao SUS, já implementou diversas ferramentas para uso nas Unidades de Saúde nacionais, porém, esses sistemas apresentam baixa interoperabilidade entre eles, o que dificulta relacionar os dados existentes. Além disso, os sistemas são todos de código fechado, não possibilitando a edição do código por terceiros, fato que impede a adição de funcionalidades úteis aos profissionais de saúde.
-
-Atualmente, o sistema mais importante da atenção básica nacional é o Prontuário Eletrônico do Cidadão (PEC), responsável, principalmente, por coletar as informações clínicas e administrativas do paciente durante atendimentos realizados no contexto das Unidades Básicas de Saúde (UBS), ele é disponibilizado pelo DATASUS para uso, mas é possível a utilização de sistemas desenvolvidos por terceiros que atuem em seu lugar. Portanto, objetiva-se neste projeto estruturar uma arquitetura de referência de código aberto que atenda os requisitos da estratégia e-SUS Atenção Básica e que contenha funcionalidades que agentes de saúde considerem importantes. Esse sistema, intitulado OpenPEC, está sendo desenvolvido com base nas documentações oficiais disponibilizadas pelo Ministério da Saúde, além de materiais disponibilizados por terceiros que atuam na área da
-saúde.
+Nos últimos anos o Ministério da Saúde tem feito um esforço a fim de melhorar os sistemas de saúde, dentre as iniciativas, destaca-se a estratégia e-SUS Atenção Básica (e-SUS AB), que tem como principal objetivo informatizar e melhorar os atendimentos de saúde no âmbito da atenção básica nacional. Atualmente, o sistema mais importante da atenção básica é o Prontuário Eletrônico do Cidadão (PEC), responsável por registrar dados de atendimentos de saúde. O Ministério da Saúde disponibiliza uma versão do PEC, mas os municípios podem optar por versões desenvolvidas localmente. Este projeto objetiva o desenvolvimento de uma arquitetura de referência como um projeto de Software Livre que atenda aos requisitos da estratégia e-SUS AB e do Sistema de Informação em Saúde para a Atenção Básica (SISAB) e que contenha funcionalidades similares ao PEC. Esse sistema, intitulado OpenPEC, tem como principal vantagem o fato de ser de código aberto, permitindo a edição e adição de novas utilidades, além de possibilitar que o projeto esteja sempre evoluindo. O OpenPEC está sendo desenvolvido com base nas documentações oficiais disponibilizadas pelo Ministério da Saúde, utilizando linguagens e técnicas de programação web modernas.
 
 ## Contexto
 
@@ -17,28 +14,32 @@ Além dos sistemas PEC e CDS, é possível que a unidade de saúde utilize um si
 
 ## Estrutura da Aplicação
 
-Foi definido que o OpenPEC teria uma interface semelhante ao PEC e-SUS, a fim de ser fácil a interação de novos usuários. A
-Figura 1 apresenta a tela do PEC Treinamento referente à área de administração de um funcionário definido como Administrador. É importante notar que há telas diferentes para lotações diferentes.
+Foi definido que o OpenPEC teria uma interface e cores semelhantes ao PEC e-SUS, a fim de ser fácil a interação de novos usuários. A
+Figura 1 apresenta a tela de login do OpenPEC, que solicita o CPF e senha do usuário, assim como o PEC.
 
-![Imagem 1](https://github.com/openpec/OpenPEC/blob/master/Assets/pec.PNG?raw=true)
+![Imagem 1](/readmeAssets/loginScreen.png?raw=true)
 
-Figura 1 – Tela de Administrador do PEC Treinamento versão 3.1.11. Fonte: Screenshot da tela do PEC Treinamento.
+Figura 1 – Tela de Login do OpenPEC.
 
-Quanto à estrutura da aplicação, o desenvolvimento do OpenPEC contempla a criação de aplicação Web e _container_ Docker para implantação rápida do sistema. Nesta fase serão utilizadas metodologias ágeis de desenvolvimento de _software_ e técnicas e linguagens de programação web modernas, tais como Javascript, CSS3 e HTML5 no _frontend_ e a arquitetura de microsserviços e a linguagem Golang no _backend_ da aplicação, objetivando alta performance e alta escalabilidade.
+O primeiro cadastrado do sistema recebe o status de administrador, podendo configurar a lotação dos outros cadastrados, assim como definir novos administradores.
 
-## Exportação de Dados
-Para fazer a integração de sistemas próprios ao SISAB é necessário a exportação de um arquivo no formato Thrift, que
-é importado pela aplicação PEC Centralizador, responsável por enviar os dados para o SISAB. A Figura 1 explicita com mais clareza esse processo.
+Após o login, o usuário é redirecionado para a página principal da aplicação, onde ele pode usar as funcionalidades do sistema, utilizando as funções relacionadas a saúde ou ao seu perfil. A Figura 2 apresenta a tela inicial do OpenPEC, após o login.
 
-![Imagem 2](https://github.com/openpec/OpenPEC/blob/master/Assets/openPec.png?raw=true)
+![Imagem 2](/readmeAssets/homeScreen.png?raw=true)
 
-Figura 2 - Fluxo de transmissão de dados para integração de sistemas próprios com o SISAB. Fonte: Adaptado do Manual do PEC (4).
+Quanto à estrutura da aplicação, o desenvolvimento do OpenPEC contempla a criação de aplicação Web e _container_ Docker para implantação rápida do sistema. Nesta fase estão sendo utilizadas metodologias ágeis de desenvolvimento de _software_ e técnicas e linguagens de programação web modernas, tais como HTML5 e CSS3 no _frontend_ e a linguagem Golang no _backend_ da aplicação, objetivando alta performance e alta escalabilidade.
 
-As especificações técnicas para integração, e os padrões usados são disponibilizados pelo Ministério da Saúde no Manual de Exportação e-SUS (5) e no Layout e-SUS AB de Dados e Interfaces (LEDI AB) (6), sendo necessário apenas a execução dos métodos disponibilizados. Nesse projeto, foi utilizada a linguagem Java para implementação dos arquivos no formato Thrift.
+
+
+### Artigo
+
+Mais informações quanto à contextualização do projeto podem ser lidas no artigo da revista Temas em Saúde [clicando aqui](http://temasemsaude.com/wp-content/uploads/2020/06/20303.pdf). É preciso notar que o projeto sofreu algumas alterações nas metodologias usadas, diferindo do que foi descrito no artigo.
+
 
 ### Contato
 
 Para mais informações, sugestões ou critícas, entre em contato pelo e-mail openpec@gmail.com.
+
 
 ### Referências
 
@@ -47,11 +48,5 @@ Para mais informações, sugestões ou critícas, entre em contato pelo e-mail o
 (2) O que é Prontuário Eletrônico do Cidadão? Disponível em: http://dab.saude.gov.br/portaldab/noticias.php?conteudo=_&cod=2300.
 
 (3) e-SUS Atenção Básica : manual de implantação / Ministério da Saúde. Disponível em: http://189.28.128.100/dab/docs/portaldab/documentos/manual_implantacao_esus.pdf.
-
-(4) Manual de Uso do Sistema com Prontuário Eletrônico do Cidadão - PEC. Disponível em: http://189.28.128.100/dab/docs/portaldab/documentos/esus/Manual_PEc_3_1.pdf.
-
-(5) Manual de Exportação. Departamento de Atenção Básica.
-
-(6) Layout e-SUS AB de Dados e Interface Versão 3.0.1. Disponível em: https://integracao.esusab.ufsc.br/.
 
 
