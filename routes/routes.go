@@ -1,15 +1,15 @@
 package routes
 
 import (
-	"github.com/OpenPEC/auth"
-	"github.com/OpenPEC/config"
-	"github.com/OpenPEC/modules"
-	"github.com/OpenPEC/modules/administracao"
-	"github.com/OpenPEC/modules/agenda"
-	"github.com/OpenPEC/modules/atendimentos"
-	"github.com/OpenPEC/modules/cidadao"
-	"github.com/OpenPEC/modules/configuracoes"
-	"github.com/OpenPEC/modules/relatorios"
+	"github.com/openpec/OpenPEC/auth"
+	"github.com/openpec/OpenPEC/config"
+	"github.com/openpec/OpenPEC/modules"
+	"github.com/openpec/OpenPEC/modules/administracao"
+	"github.com/openpec/OpenPEC/modules/agenda"
+	"github.com/openpec/OpenPEC/modules/atendimentos"
+	"github.com/openpec/OpenPEC/modules/cidadao"
+	"github.com/openpec/OpenPEC/modules/configuracoes"
+	"github.com/openpec/OpenPEC/modules/relatorios"
 )
 
 //Routes define todas as rotas do webservice

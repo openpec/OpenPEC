@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/OpenPEC/config"
+	"github.com/openpec/OpenPEC/config"
 	"gopkg.in/guregu/null.v4"
 )
 

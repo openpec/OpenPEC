@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/OpenPEC/config"
+	"github.com/openpec/OpenPEC/config"
 )
 
 //HomeGet é o handler da pagina principal

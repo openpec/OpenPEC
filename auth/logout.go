@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/OpenPEC/config"
+	"github.com/openpec/OpenPEC/config"
 )
 
 //Logout faz a desconexão do usuário

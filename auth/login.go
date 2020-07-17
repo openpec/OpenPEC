@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/OpenPEC/config"
+	"github.com/openpec/OpenPEC/config"
 	"golang.org/x/crypto/bcrypt"
 )
 

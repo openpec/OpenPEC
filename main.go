@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/OpenPEC/config"
-	"github.com/OpenPEC/routes"
 	"github.com/gorilla/mux"
+	"github.com/openpec/OpenPEC/config"
+	"github.com/openpec/OpenPEC/routes"
 )
 
 func main() {

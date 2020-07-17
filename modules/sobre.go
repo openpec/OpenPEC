@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/OpenPEC/config"
+	"github.com/openpec/OpenPEC/config"
 )
 
 //Sobre define a página de sobre
