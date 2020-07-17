@@ -1,3 +1,5 @@
+OpenPEC
+
 ## Índice
 
 - [Introdução](#introdução)
@@ -51,7 +53,7 @@ Quanto à estrutura da aplicação, o desenvolvimento do OpenPEC contempla a cri
 Mais informações quanto à contextualização do projeto podem ser lidas no artigo da revista Temas em Saúde [clicando aqui](http://temasemsaude.com/wp-content/uploads/2020/06/20303.pdf). É preciso notar que o projeto sofreu algumas alterações nas metodologias usadas, diferindo do que foi descrito no artigo.
 
 
-### Contato
+## Contato
 
 Para mais informações, sugestões ou critícas, entre em contato pelo e-mail openpec@gmail.com.
 
