@@ -1,0 +1,22 @@
+CREATE DATABASE openpec;
+USE openpec;
+CREATE TABLE user (
+	cod INT auto_increment NOT NULL,
+    PRIMARY KEY (cod),
+	cpf VARCHAR (11) NOT NULL,
+    pass VARCHAR(150) NOT NULL,
+    nome VARCHAR(20) NOT NULL,
+    sobrenome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    cns VARCHAR(100),
+    sexo VARCHAR(9),
+    cidade VARCHAR(50),
+    estado VARCHAR(2),
+    endereco VARCHAR(50),
+    numCasa VARCHAR(5),
+    bairro VARCHAR(40),
+    cep VARCHAR(8),
+    telefone VARCHAR(11),
+    nascimento DATE,
+    isAdmin BOOL
+);

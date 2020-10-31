@@ -17,7 +17,7 @@ type Server struct {
 
 //Connect conecta ao banco de dados
 func Connect() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root:password@/openpec")
+	db, err := sql.Open("mysql", "root:password@/openpec") //configure aqui a autenticação do mysql (atualmente o user é 'root' e a senha 'password', 'openpec' é o nome do banco de dados)
 
 	if err != nil {
 		return nil, err

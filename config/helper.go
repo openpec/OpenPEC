@@ -16,6 +16,10 @@ func Render(w http.ResponseWriter, filename string, data interface{}) {
 		log.Panic("Erro ao pegar a pasta raiz do projeto: ", err)
 	}
 
+	if wd == "/" {
+		wd = "go/src/github.com/OpenPEC/"
+	}
+
 	t, err := template.ParseFiles(wd + filename)
 	if err != nil {
 		log.Println("Problema ao renderizar a página: ", err)

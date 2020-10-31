@@ -56,6 +56,7 @@
     border: 2px solid rgba(0, 27, 31, 0.8);
      
     -webkit-box-shadow: 5px;
+    box-shadow: 5px;
     border-radius: 5px;
      
     -webkit-animation-duration: 0.5s;
