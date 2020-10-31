@@ -1,4 +1,6 @@
-OpenPEC
+OpenPEC é um **projeto de iniciação científica** feito por **Vinícius Girotto**. Ele não está completo, mas é possível executá-lo.
+
+OpenPEC is a **scientific initiation project** made by **Vinícius Girotto**.
 
 ## Índice
 
@@ -7,6 +9,7 @@ OpenPEC
     - [Contexto](#contexto)
 - [OpenPEC](#openpec)
     - [Estrutura da Aplicação](#estrutura-da-aplicação)
+- [Instalação](#instalação)
 - [Artigo Publicado](#artigo)
 - [Contato](#contato)
 - [Referências do Readme](#referências)
@@ -46,6 +49,63 @@ Figura 2 – Tela de Início do OpenPEC.
 
 Quanto à estrutura da aplicação, o desenvolvimento do OpenPEC contempla a criação de aplicação Web e _container_ Docker para implantação rápida do sistema. Nesta fase estão sendo utilizadas metodologias ágeis de desenvolvimento de _software_ e técnicas e linguagens de programação web modernas, tais como HTML5 e CSS3 no _frontend_ e a linguagem Golang no _backend_ da aplicação, objetivando alta performance e alta escalabilidade.
 
+## Instalação
+
+É preciso baixar o repositório do GitHub para executar o OpenPEC. 
+Mas antes é necessário instalar e configurar o MySQL. Para isso, se você estiver no linux, faça:
+
+```
+sudo apt update
+sudo apt install mysql-server
+```
+
+Verifique se o sistema está rodando:
+```
+sudo systemctl status mysql
+```
+
+Então entre no MySQL e configure o usuário e senha conforme no arquivo "config/db.go":
+```
+mysql
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+FLUSH PRIVILEGES;
+exit;
+```
+
+Por fim, crie o banco de dados 'openpec' e a tabela 'user' com o comando a seguir dentro do mysql:
+```
+CREATE DATABASE openpec;
+USE openpec;
+CREATE TABLE user (
+	cod INT auto_increment NOT NULL,
+    PRIMARY KEY (cod),
+	cpf VARCHAR (11) NOT NULL,
+    pass VARCHAR(150) NOT NULL,
+    nome VARCHAR(20) NOT NULL,
+    sobrenome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    cns VARCHAR(100),
+    sexo VARCHAR(9),
+    cidade VARCHAR(50),
+    estado VARCHAR(2),
+    endereco VARCHAR(50),
+    numCasa VARCHAR(5),
+    bairro VARCHAR(40),
+    cep VARCHAR(8),
+    telefone VARCHAR(11),
+    nascimento DATE,
+    isAdmin BOOL
+);
+
+```
+
+Agora, baixe o repositório dentro do seu workplace do Golang, no caminho "go/src/github.com/OpenPEC".
+
+Para executar, simplesmente abra um terminal na pasta do projeto e rode:
+```
+go run main.go
+```
 
 
 ## Artigo

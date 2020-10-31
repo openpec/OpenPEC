@@ -25,5 +25,6 @@ CMD ["/go/src/github.com/OpenPEC/OpenPEC"]
 
 EXPOSE 9090
 
-#sudo docker build -t openpec .
-#sudo docker run --network="host" --publish 9090:9090 --name openpec --rm openpec
+#Comando para rodar o OpenPEC no Docker
+#docker build -t openpec .
+#docker run --network="host" --publish 9090:9090 --name openpec --rm openpec
